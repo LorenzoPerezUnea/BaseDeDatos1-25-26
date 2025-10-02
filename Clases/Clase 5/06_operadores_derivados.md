@@ -34,7 +34,9 @@ Entre ellas se encuentra la **intersección** (∩), que devuelve las tuplas que
 ### El **join**
 
 Otra operación de gran importancia es el **join** o combinación, que consiste en realizar un producto cartesiano seguido de una selección que conserva únicamente las tuplas que cumplen una condición de coincidencia.
+
 La notación R ⨝ condición S se utiliza para representar esta operación de manera compacta.
+
 El **join natural** es un caso particular en el que la condición es la igualdad de todos los atributos que tienen el mismo nombre en ambas relaciones.
 
 CLIENTE(ID, NOMBRE) ⨝ PEDIDO(ID_CLIENTE, IMPORTE)
@@ -47,6 +49,7 @@ CLIENTE(ID, NOMBRE) ⨝ PEDIDO(ID_CLIENTE, IMPORTE)
 ### La **división**
 
 Por último, la **división** (÷) es una operación usada para consultas de tipo “para todos”, devolviendo las tuplas de una relación R que están relacionadas con **todas** las tuplas de otra relación S.
+
 Es útil en consultas como “encontrar los empleados que han trabajado en todos los proyectos” o “los estudiantes que han aprobado todas las asignaturas requeridas".
 
 **Relación R = COMPRA(cliente, producto):**
@@ -78,5 +81,4 @@ Es útil en consultas como “encontrar los empleados que han trabajado en todos
 |--------|
 | Ana    |
 | Marta  |
-
 
