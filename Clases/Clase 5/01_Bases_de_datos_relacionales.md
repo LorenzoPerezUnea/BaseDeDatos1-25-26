@@ -1,5 +1,4 @@
-#El Modelo Relacional
-
+# El Modelo Relacional
 
 Este modelo es la base formal sobre la que operan la mayoría de los sistemas de gestión de bases de datos modernos y ofrece un marco riguroso y uniforme para representar datos y las operaciones que se pueden realizar sobre ellos.
 
