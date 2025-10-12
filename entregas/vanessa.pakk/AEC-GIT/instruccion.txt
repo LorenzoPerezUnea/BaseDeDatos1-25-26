@@ -1,1 +1,2 @@
 Actividad AEC-GIT - Vanessa Pakk
+Paso 1: Hice el fork y clonado del repositorio.
