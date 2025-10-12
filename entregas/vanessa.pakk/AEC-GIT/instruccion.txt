@@ -2,3 +2,4 @@ Actividad AEC-GIT - Vanessa Pakk
 Paso 1: Hice el fork y clonado del repositorio.
 Paso 3: Hice el commit inicial y lo subí a la rama main con git push origin main.
 Paso 4: Creé la rama docs/modificaciones y empecé a documentar los pasos realizados.
+Paso 5: Realicé los últimos commits y prepararé el Pull Request hacia el repositorio original.
