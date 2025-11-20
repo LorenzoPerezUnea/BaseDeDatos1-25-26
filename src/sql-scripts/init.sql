@@ -1,22 +1,29 @@
--- Archivo de inicialización para la base de datos BBDD1
--- Este archivo se ejecutará automáticamente cuando se cree el contenedor de MySQL
+CREATE DATABASE taller_normalizacion;
+USE taller_normalizacion;
 
-USE bbdd1_db;
-
--- Crear una tabla de ejemplo para probar la conexión
-CREATE TABLE IF NOT EXISTS estudiantes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100) NOT NULL,
-    email VARCHAR(150) UNIQUE,
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE cliente_pedido (
+  id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_cliente VARCHAR(100),
+  direccion VARCHAR(150),
+  id_pedido INT,
+  fecha_pedido DATE,
+  producto VARCHAR(100),
+  cantidad INT,
+  precio_unitario DECIMAL(10,2),
+  region VARCHAR(100)
 );
 
--- Insertar algunos datos de ejemplo
-INSERT INTO estudiantes (nombre, apellido, email) VALUES
-('Juan', 'Pérez', 'juan.perez@email.com'),
-('María', 'González', 'maria.gonzalez@email.com'),
-('Carlos', 'Rodríguez', 'carlos.rodriguez@email.com');
+CREATE TABLE proveedor_producto_region (
+  id_proveedor INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_proveedor VARCHAR(100),
+  producto VARCHAR(100),
+  region VARCHAR(100),
+  precio DECIMAL(10,2)
+);
 
--- Mostrar información sobre las tablas creadas
-SHOW TABLES;
+CREATE TABLE producto_categoria (
+  id_producto INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_producto VARCHAR(100),
+  categoria VARCHAR(100),
+  subcategoria VARCHAR(100)
+);
