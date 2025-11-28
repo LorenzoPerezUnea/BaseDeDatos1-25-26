@@ -1,29 +1,40 @@
-CREATE DATABASE taller_normalizacion;
-USE taller_normalizacion;
+CREATE DATABASE logistica;
+USE logistica;
 
-CREATE TABLE cliente_pedido (
+CREATE TABLE cliente (
   id_cliente INT AUTO_INCREMENT PRIMARY KEY,
-  nombre_cliente VARCHAR(100),
-  direccion VARCHAR(150),
+  nombre VARCHAR(100)
+);
+
+CREATE TABLE pedido (
+  id_pedido INT AUTO_INCREMENT PRIMARY KEY,
+  id_cliente INT,
+  fecha DATETIME,
+  estado VARCHAR(20),
+  FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
+);
+
+CREATE TABLE entrega (
+  id_entrega INT AUTO_INCREMENT PRIMARY KEY,
   id_pedido INT,
-  fecha_pedido DATE,
-  producto VARCHAR(100),
-  cantidad INT,
-  precio_unitario DECIMAL(10,2),
-  region VARCHAR(100)
+  fecha_entrega DATETIME,
+  estado VARCHAR(20),
+  FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido)
 );
 
-CREATE TABLE proveedor_producto_region (
-  id_proveedor INT AUTO_INCREMENT PRIMARY KEY,
-  nombre_proveedor VARCHAR(100),
-  producto VARCHAR(100),
-  region VARCHAR(100),
-  precio DECIMAL(10,2)
+CREATE TABLE pago (
+  id_pago INT AUTO_INCREMENT PRIMARY KEY,
+  id_pedido INT,
+  monto DECIMAL(10,2),
+  estado VARCHAR(20),
+  FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido)
 );
 
-CREATE TABLE producto_categoria (
-  id_producto INT AUTO_INCREMENT PRIMARY KEY,
-  nombre_producto VARCHAR(100),
-  categoria VARCHAR(100),
-  subcategoria VARCHAR(100)
-);
+INSERT INTO cliente (nombre)
+VALUES ('Javier'), ('Lucía');
+
+INSERT INTO pedido (id_cliente, fecha, estado)
+VALUES 
+(1, NOW(), 'Pendiente'),
+(2, NOW(), 'Pendiente');
+
