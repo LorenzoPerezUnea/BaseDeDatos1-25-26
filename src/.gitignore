@@ -1,0 +1,17 @@
+# Environment files (commented out .env for this educational project)
+# .env
+.env.local
+.env.production
+
+# Docker volumes and logs
+mysql_data/
+mysql_logs/
+
+# Temporary files
+*.tmp
+*.log
+*.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
