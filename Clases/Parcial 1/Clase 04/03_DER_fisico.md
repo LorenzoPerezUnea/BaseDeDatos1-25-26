@@ -15,7 +15,8 @@ erDiagram
     CLIENTE ||--o{ PEDIDO : "realiza"
     PEDIDO ||--o{ LINEA_PEDIDO : "contiene"
     VARIANTE_PRODUCTO ||--o{ LINEA_PEDIDO : "incluye"
-    PEDIDO ||--o{ ENVIO : "genera"
+    LINEA_PEDIDO ||--o{ ENVIO : "es_despachada_en"
+    ALMACEN ||--o{ LINEA_PEDIDO : "surte"
     PEDIDO ||--o{ PAGO : "tiene"
     PAGO ||--o{ REEMBOLSO : "genera"
     LINEA_PEDIDO ||--o{ DEVOLUCION : "puede_ser_devuelta"
@@ -97,16 +98,18 @@ erDiagram
         int id_linea PK
         int id_pedido FK
         int id_variante FK
+        int id_almacen FK
+        int id_envio FK "nullable"
         int cantidad
         float precio_unitario
     }
 
     ENVIO {
         int id_envio PK
-        int id_pedido FK
         string estado_envio
         date fecha_envio
         string empresa_transporte
+        string codigo_seguimiento
     }
 
     PAGO {
