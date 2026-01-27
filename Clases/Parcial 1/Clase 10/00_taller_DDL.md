@@ -95,7 +95,6 @@ id_pedido INT,
 id_producto INT,
 cantidad INT DEFAULT 1,
 subtotal DECIMAL(10,2),
-FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido),
 FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
 );
 ```
@@ -108,10 +107,6 @@ Objetivo: Introducir buenas prácticas de nomenclatura y validación.
 ```sql
 -- Renombrar una tabla
 ALTER TABLE cliente RENAME TO clientes;
-
--- Agregar restricción CHECK
-ALTER TABLE producto
-ADD CONSTRAINT chk_precio CHECK (precio > 0);
 
 -- Agregar una clave foránea con nombre explícito
 ALTER TABLE detalle_pedido
