@@ -4,12 +4,15 @@
 erDiagram
 USUARIO ||--o{ JUGADOR : "es un"
 USUARIO ||--o{ ESPECTADOR : "es un"
+JUGADOR }o--o{ JUGADOR : "sigue"
 JUGADOR ||--|| PERFIL : "tiene"
 JUGADOR ||--o{ TRANSMISION : "realiza"
 JUGADOR }o--o{ EQUIPO : "pertenece a"
 EQUIPO }o--o{ TORNEO : "participa en"
 TORNEO ||--o{ PARTIDA : "contiene"
 PARTIDA }o--|| JUEGO : "usa"
+PARTIDA }o--o{ JUGADOR : "participa"
+PARTIDA }o--o{ EQUIPO : "participa"
 ESPECTADOR ||--o{ DONACION : "realiza"
 ESPECTADOR ||--o{ COMENTARIO : "escribe"
 

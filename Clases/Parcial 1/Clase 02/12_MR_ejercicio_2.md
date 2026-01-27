@@ -7,11 +7,16 @@ erDiagram
     USUARIO ||--o{ ESPECTADOR : "es"
     JUGADOR ||--|| PERFIL : "tiene"
     JUGADOR ||--o{ TRANSMISION : "realiza"
+    JUGADOR ||--o{ JUGADOR_FOLLOW : "sigue a"
+    JUGADOR ||--o{ JUGADOR_FOLLOW : "es seguido por"
     JUGADOR ||--o{ JUGADOR_EQUIPO : "pertenece"
     EQUIPO ||--o{ JUGADOR_EQUIPO : "tiene"
     EQUIPO ||--o{ EQUIPO_TORNEO : "participa"
     TORNEO ||--o{ EQUIPO_TORNEO : "incluye"
     TORNEO ||--o{ PARTIDA : "contiene"
+    PARTIDA ||--o{ PARTICIPACION_PARTIDA : "tiene participación"
+    JUGADOR ||--o{ PARTICIPACION_PARTIDA : "participa en"
+    EQUIPO ||--o{ PARTICIPACION_PARTIDA : "participa en"
     PARTIDA }o--|| JUEGO : "usa"
     ESPECTADOR ||--o{ DONACION : "realiza"
     ESPECTADOR ||--o{ COMENTARIO : "escribe"
@@ -29,6 +34,12 @@ erDiagram
         string nickname
         int nivel
         int experiencia
+    }
+
+    JUGADOR_FOLLOW {
+        int id_seguidor FK
+        int id_seguido FK
+        date fecha_follow
     }
 
     ESPECTADOR {
@@ -90,6 +101,14 @@ erDiagram
         string resultado
     }
 
+    PARTICIPACION_PARTIDA {
+        int id_partida FK
+        int id_jugador FK
+        int id_equipo FK
+        string resultado_parcial
+        int puntos_obtenidos
+    }
+
     JUEGO {
         int id_juego PK
         string nombre
@@ -125,6 +144,7 @@ erDiagram
 
 - `JUGADOR` ↔ `EQUIPO` → `JUGADOR_EQUIPO`
 - `EQUIPO` ↔ `TORNEO` → `EQUIPO_TORNEO`
+- `PARTIDA` ↔ `JUGADOR`/`EQUIPO` → `PARTICIPACION_PARTIDA` (N:M para permitir múltiples participantes por partida).
 
 **Relaciones 1:N como FK:**
 
