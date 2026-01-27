@@ -27,7 +27,7 @@ WHERE fecha >= '2024-01-01'
 GROUP BY id_cliente
 HAVING SUM(total) > 500
 )
-GROUP BY c.nombre
+GROUP BY c.id_cliente, c.nombre
 ORDER BY suma_total DESC;
 ```
 

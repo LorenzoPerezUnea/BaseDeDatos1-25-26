@@ -117,7 +117,7 @@ SELECT MAX(precio) FROM producto WHERE id_categoria = c.id_categoria
 SELECT c.nombre AS Categoria, AVG(p.precio) AS Promedio
 FROM producto p
 JOIN categoria c ON p.id_categoria = c.id_categoria
-GROUP BY c.nombre;
+GROUP BY c.id_categoria, c.nombre;
 
 --8.
 SELECT c.nombre, COUNT(p.id_pedido) AS cantidad_pedidos
