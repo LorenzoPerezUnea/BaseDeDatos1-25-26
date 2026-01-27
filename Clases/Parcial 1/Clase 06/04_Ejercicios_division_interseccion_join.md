@@ -115,8 +115,8 @@ Resultado (parcial):
 | 2           | Juan Pérez  | IT    | 10          |
 | 2           | Juan Pérez  | IT    | 20          |
 | 2           | Juan Pérez  | IT    | 30          |
-| 3           | Marta Ruiz  | IT    | 10          |
-| 3           | Marta Ruiz  | IT    | 20          |
+| 3           | Marta Ruiz  | HR    | 10          |
+| 3           | Marta Ruiz  | HR    | 20          |
 
 ---
 
@@ -204,8 +204,8 @@ R = (ASIGNACION ⋈ (EMPLEADO_A ∪ EMPLEADO_B))
 | 2           | Juan Pérez  | IT    | 10          |
 | 2           | Juan Pérez  | IT    | 20          |
 | 2           | Juan Pérez  | IT    | 30          |
-| 3           | Marta Ruiz  | IT    | 10          |
-| 3           | Marta Ruiz  | IT    | 20          |
+| 3           | Marta Ruiz  | HR    | 10          |
+| 3           | Marta Ruiz  | HR    | 20          |
 
 π(nombre)(R ÷ S)
 
@@ -239,16 +239,15 @@ R = π(id_proyecto)(σ(nombre_proyecto = CRM  ∨ nombre_proyecto = ERP)(PROYECT
 | 10          |
 | 20          |
 
-T = π(id_empleado )(ASIGNACION ÷ R)
+T = (π{id_empleado, id_proyecto}(ASIGNACION) ÷ R)
+(Empleados que han trabajado en TODOS los proyectos de R)
 
 | id_empleado |
 |-------------|
 | 1           | 
 | 2           |
 
-Resultado:
-
-S ÷ T
+Resultado Final: T ⨝ S (Filtramos los que cumplen la división por el departamento IT)
 
 | id_empleado | nombre      | departamento |
 |-------------|-------------|-------|
