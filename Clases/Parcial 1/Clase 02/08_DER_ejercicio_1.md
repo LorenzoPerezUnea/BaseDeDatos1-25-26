@@ -13,7 +13,16 @@ erDiagram
         string telefono
     }
 
+    PERSONA {
+        string dni
+        date fecha_nacimiento
+    }
     PERSONA ||--|| CLIENTE : "es un"
+
+    EMPRESA {
+        string cif
+        string razon_social
+    }
     EMPRESA ||--|| CLIENTE : "es un"
 
     EMPLEADO {
@@ -22,7 +31,14 @@ erDiagram
         string cargo
     }
 
+    TECNICO {
+        string especialidad
+    }
     TECNICO ||--|| EMPLEADO : "es un"
+
+    ADMINISTRATIVO {
+        string departamento
+    }
     ADMINISTRATIVO ||--|| EMPLEADO : "es un"
 
     SERVICIO {
