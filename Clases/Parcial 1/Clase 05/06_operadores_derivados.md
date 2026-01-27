@@ -29,7 +29,7 @@ Entre ellas se encuentra la **intersección** (∩), que devuelve las tuplas que
 | ID | NOMBRE |
 |----|--------|
 | 3  | Marta  |
-|  4 | Luis   |
+| 4  | Jorge  |
 
 ### El **join**
 
