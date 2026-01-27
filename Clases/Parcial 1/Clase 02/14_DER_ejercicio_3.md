@@ -17,6 +17,7 @@ erDiagram
 
     RESEÑA }o--|| RUTINA : "sobre "
     RESEÑA }o--|| PRODUCTO : "sobre "
+    RESEÑA }o--|| ENTRENADOR : "sobre "
     PROGRESO }o--|| RUTINA : "corresponde_a"
 
     %% === ATRIBUTOS PRINCIPALES ===
