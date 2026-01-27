@@ -35,7 +35,8 @@ Los tipos de datos más comunes en SQL permiten definir la naturaleza de cada ca
 * FLOAT para valores con decimales
 * CHAR(n) y VARCHAR(n) para cadenas de texto de longitud fija o variable
 * DATE, TIME y DATETIME para fechas y horas
-* BOOLEAN para valores verdadero o falso  TEXT o BLOB para texto o datos binarios extensos.
+* BOOLEAN para valores verdadero o falso
+* TEXT o BLOB para texto o datos binarios extensos.
 
 Es importante elegir el tipo de dato más ajustado al uso previsto, ya que esto optimiza el almacenamiento y el rendimiento.
 
