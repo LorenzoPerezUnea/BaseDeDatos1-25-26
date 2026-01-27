@@ -20,7 +20,7 @@ La primera forma inserta valores en todas las columnas en el orden definido en l
 Cuando una columna tiene un valor por defecto (DEFAULT) o permite NULL, es posible omitirla en la inserción sin causar error. En este caso, MySQL usará el valor establecido o NULL automáticamente. Por ejemplo:
 
 ```sql
-CREATE TABLE ejemplo ( id INT AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50) NOT NULL, email VARCHAR(100) DEFAULT NULL, creado TIMESTAMP DEFAULT CURRENT_TIMESTAMP ); ``
+CREATE TABLE ejemplo ( id INT AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(50) NOT NULL, email VARCHAR(100) DEFAULT NULL, creado TIMESTAMP DEFAULT CURRENT_TIMESTAMP );
 
 INSERT INTO ejemplo (nombre) VALUES ('Ana');
 SELECT * FROM ejemplo;

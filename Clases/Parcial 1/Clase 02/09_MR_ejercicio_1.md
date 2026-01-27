@@ -6,12 +6,29 @@ erDiagram
     EMPLEADO ||--o{ CONTRATO : "atiende"
     CONTRATO ||--o{ DETALLE_CONTRATO : "tiene"
     SERVICIO ||--o{ DETALLE_CONTRATO : "aparece en"
+    CLIENTE ||--|| PERSONA : "es una"
+    CLIENTE ||--|| EMPRESA : "es una"
+    EMPLEADO ||--|| TECNICO : "es un"
+    EMPLEADO ||--|| ADMINISTRATIVO : "es un"
 
     CLIENTE {
         int id_cliente PK
         string nombre
         string direccion
         string telefono
+        string tipo_cliente
+    }
+
+    PERSONA {
+        int id_cliente PK, FK
+        date fecha_nacimiento
+        string dni
+    }
+
+    EMPRESA {
+        int id_cliente PK, FK
+        string razon_social
+        string cif
     }
 
     CONTRATO {
@@ -27,6 +44,17 @@ erDiagram
         int id_empleado PK
         string nombre
         string cargo
+        string tipo_empleado
+    }
+
+    TECNICO {
+        int id_empleado PK, FK
+        string especialidad
+    }
+
+    ADMINISTRATIVO {
+        int id_empleado PK, FK
+        string departamento
     }
 
     SERVICIO {

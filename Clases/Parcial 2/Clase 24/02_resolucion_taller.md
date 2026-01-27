@@ -104,6 +104,9 @@ BEGIN
   ELSEIF stock_min < 0 THEN
     ROLLBACK;
     SELECT CONCAT('Error: stock insuficiente (mínimo=', stock_min, '). Transacción revertida.') AS resultado;
+  ELSEIF p_monto_pago < total_venta THEN
+    ROLLBACK;
+    SELECT CONCAT('Error: pago insuficiente (recibido=', p_monto_pago, ', necesario=', total_venta, '). Transacción revertida.') AS resultado;
   ELSE
     -- 6) Insertar pago, actualizar total de la venta y confirmar
     INSERT INTO pago (id_venta, monto, fecha_pago)

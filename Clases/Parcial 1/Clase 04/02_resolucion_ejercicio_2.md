@@ -68,15 +68,17 @@
 * id\_linea (PK)
 * id\_pedido (FK)
 * id\_variante (FK)
+* id\_almacen (FK)
+* id\_envio (FK, nullable)
 * cantidad
 * precio\_unitario
 
 **ENVIO (Shipment)**
 
 * id\_envio (PK)
-* id\_pedido (FK)
 * estado\_envio
 * fecha\_envio
+* codigo\_seguimiento
 
 **PAGO**
 
@@ -147,7 +149,8 @@
 * **Cliente–Pedido:** Cliente realiza pedidos (1:N), Pedido pertenece a cliente (N:1)
 * **Pedido–LíneaPedido:** Pedido contiene líneas (1:N), Línea pertenece a pedido (N:1)
 * **Variante–LíneaPedido:** Variante puede aparecer en varias líneas (1:N), Línea se refiere a una variante (N:1)
-* **Pedido–Envío:** Pedido puede generar varios envíos (1:N), Envío pertenece a pedido (N:1)
+* **LíneaPedido–Envío:** Cada línea se despacha en un envío (N:1), un envío agrupa varias líneas (1:N)
+* **Almacén–LíneaPedido:** El stock de cada línea se surte desde un almacén (N:1)
 * **Pedido–Pago:** Pedido puede tener varios pagos (1:N), Pago pertenece a pedido (N:1)
 * **Pago–Reembolso:** Pago genera reembolsos (1:N), Reembolso pertenece a pago (N:1)
 * **LíneaPedido–Devolución:** Línea puede ser devuelta (0..N), Devolución corresponde a línea (N:1)

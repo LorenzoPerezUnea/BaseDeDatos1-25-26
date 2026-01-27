@@ -100,11 +100,6 @@ INSERT INTO region_distribucion (nombre_region)
 SELECT DISTINCT region FROM proveedor_producto_region;
 ```
 
-#### c) Eliminar la tabla no normalizada original
-
-```sql
-DROP TABLE proveedor_producto_region;
-```
 
 ### Paso 3. Normalización de `producto_categoria` (3FN)
 
@@ -180,13 +175,13 @@ CREATE TABLE producto_region (
 #### d) Poblar tablas pivote
 
 ```sql
-INSERT INTO proveedor_region (id_proveedor, id_region)
-SELECT DISTINCT p.id_proveedor, r.id_region
+INSERT INTO proveedor_producto (id_proveedor, id_producto)
+SELECT DISTINCT p.id_proveedor, pr.id_producto
 FROM proveedor_producto_region ppr
 JOIN proveedor p
   ON ppr.nombre_proveedor = p.nombre_proveedor
-JOIN region_distribucion r
-  ON ppr.region = r.nombre_region;
+JOIN producto pr
+  ON ppr.producto = pr.nombre_producto;
 
 INSERT INTO proveedor_region (id_proveedor, id_region)
 SELECT DISTINCT p.id_proveedor, r.id_region
@@ -196,11 +191,11 @@ JOIN proveedor p
 JOIN region_distribucion r
   ON ppr.region = r.nombre_region;
 
-INSERT INTO proveedor_region (id_proveedor, id_region)
-SELECT DISTINCT p.id_proveedor, r.id_region
+INSERT INTO producto_region (id_producto, id_region)
+SELECT DISTINCT pr.id_producto, r.id_region
 FROM proveedor_producto_region ppr
-JOIN proveedor p
-  ON ppr.nombre_proveedor = p.nombre_proveedor
+JOIN producto pr
+  ON ppr.producto = pr.nombre_producto
 JOIN region_distribucion r
   ON ppr.region = r.nombre_region;
 ```
@@ -228,10 +223,12 @@ ALTER TABLE producto_region
 DROP TABLE producto_categoria;
 ```
 
-d) Renombrar produto_categoria_final a producto_categoria
+#### g) Renombrar producto_categoria_final a producto_categoria y limpieza final
 
 ```sql
 ALTER TABLE producto_categoria_final
 RENAME TO producto_categoria;
+
+DROP TABLE proveedor_producto_region;
 ```
 

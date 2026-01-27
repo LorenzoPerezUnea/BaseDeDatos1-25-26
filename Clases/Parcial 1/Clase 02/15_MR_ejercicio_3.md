@@ -17,6 +17,7 @@ erDiagram
     USUARIO ||--o{ RESENA : "escribe"
     RESENA }o--|| PRODUCTO : "sobre"
     RESENA }o--|| RUTINA : "sobre"
+    RESENA }o--|| ENTRENADOR : "sobre"
 
     %% ==== TABLAS ====
     USUARIO {
@@ -93,9 +94,11 @@ erDiagram
     }
 
     RESENA {
-        int id_resena
-        int id_usuario
-        int id_rutina
+        int id_resena PK
+        int id_usuario FK
+        int id_rutina FK
+        int id_producto FK
+        int id_entrenador FK
         string contenido
         int calificacion
         date fecha
@@ -140,6 +143,9 @@ erDiagram
 - `PERFIL.id_usuario` → un usuario puede tener varios perfiles (o uno según reglas).
 - `RUTINA.id_entrenador` → una rutina la crea un entrenador.
 - `RESEÑA.id_usuario` y `RESEÑA.id_entrenador` → se puede saber quién escribió y a quién va dirigida.
+
+**Integridad referencial explícita:**
+Todas las tablas con FK están claramente ligadas a su tabla padre.
 
 **CATEGORIA reutilizada**
 

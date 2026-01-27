@@ -116,7 +116,7 @@ SELECT DISTINCT
   t.tienda
 FROM proveedor_producto p
 JOIN producto_tienda pr ON p.producto = pr.producto
-JOIN proveedor_tienda t ON p.proveedor = t.proveedor;
+JOIN proveedor_tienda t ON p.proveedor = t.proveedor AND pr.tienda = t.tienda;
 ```
 
 Este SELECT devuelve la misma información que la tabla no normalizada, pero ​**sin redundancia ni anomalías**​.

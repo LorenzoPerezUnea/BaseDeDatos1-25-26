@@ -74,7 +74,7 @@ SELECT c.nombre, SUM(pa.monto) AS total_pagado
 FROM cliente c
 JOIN pedido pe ON c.id_cliente = pe.id_cliente
 JOIN pago pa ON pe.id_pedido = pa.id_pedido
-GROUP BY c.nombre
+GROUP BY c.id_cliente, c.nombre
 HAVING total_pagado > 500;
 ```
 
@@ -126,7 +126,7 @@ SELECT c.nombre, SUM(pa.monto) AS total_cliente
 FROM cliente c
 JOIN pedido pe ON c.id_cliente = pe.id_cliente
 JOIN pago pa ON pe.id_pedido = pa.id_pedido
-GROUP BY c.nombre
+GROUP BY c.id_cliente, c.nombre
 HAVING total_cliente > (SELECT AVG(monto) FROM pago);
 ```
 

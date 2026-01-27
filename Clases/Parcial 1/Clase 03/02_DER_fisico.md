@@ -8,7 +8,7 @@ erDiagram
     CLIENTE ||--o{ TICKET : "compra"
     TIPO_TICKET ||--o{ TICKET : "tiene"
     ASIENTO ||--o{ TICKET : "es_ocupado_por"
-    TICKET ||--o{ PAGO : "recibe_pago"
+    PAGO ||--o{ TICKET : "liquida"
     CLIENTE ||--o{ PAGO : "realiza"
     PAGO ||--o{ REEMBOLSO : "genera"
     DESCUENTO ||--o{ TICKET : "aplica_a"
@@ -57,9 +57,9 @@ erDiagram
     TICKET {
         int id_ticket PK
         int id_cliente FK
-        int id_sesion FK
         int id_tipo_ticket FK
         int id_asiento FK "nullable"
+        int id_pago FK "nullable"
         int id_descuento FK "nullable"
         string estado
         datetime fecha_emision
@@ -76,7 +76,6 @@ erDiagram
 
     PAGO {
         int id_pago PK
-        int id_ticket FK
         int id_cliente FK
         float monto_pagado
         datetime fecha_pago

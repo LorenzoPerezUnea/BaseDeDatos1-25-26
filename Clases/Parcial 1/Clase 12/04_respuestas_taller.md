@@ -89,8 +89,8 @@ WHERE pe.id_pedido = 1;
 --3.
 SELECT c.nombre, COUNT(p.id_pedido) AS pedidos, SUM(p.total) AS gasto_total
 FROM cliente c
-JOIN pedido p ON c.id_cliente = p.id_cliente
-GROUP BY c.nombre
+LEFT JOIN pedido p ON c.id_cliente = p.id_cliente
+GROUP BY c.id_cliente, c.nombre
 ORDER BY gasto_total DESC;
 
 --4.
@@ -117,13 +117,13 @@ SELECT MAX(precio) FROM producto WHERE id_categoria = c.id_categoria
 SELECT c.nombre AS Categoria, AVG(p.precio) AS Promedio
 FROM producto p
 JOIN categoria c ON p.id_categoria = c.id_categoria
-GROUP BY c.nombre;
+GROUP BY c.id_categoria, c.nombre;
 
 --8.
 SELECT c.nombre, COUNT(p.id_pedido) AS cantidad_pedidos
 FROM cliente c
 JOIN pedido p ON c.id_cliente = p.id_cliente
-GROUP BY c.nombre
+GROUP BY c.id_cliente, c.nombre
 ORDER BY cantidad_pedidos DESC
 LIMIT 3;
 ```

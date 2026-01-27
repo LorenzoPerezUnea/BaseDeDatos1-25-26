@@ -58,11 +58,12 @@
 
 **PRESTAMO**
 
-| id\_prestamo | id\_usuario | fecha\_prestamo | fecha\_devolucion |
-| -------------- | ------------- | ----------------- | ------------------- |
-| 100          | 1           | 2024-04-01      | 2024-04-10        |
-| 101          | 2           | 2024-04-02      | 2024-04-09        |
-| 102          | 3           | 2024-04-03      | 2024-04-15        |
+| id\_prestamo | id\_usuario | id\_libro | fecha\_prestamo | fecha\_devolucion |
+| -------------- | ------------- | ----------- | ----------------- | ------------------- |
+| 100          | 1           | 10          | 2024-04-01      | 2024-04-10        |
+| 101          | 2           | 12          | 2024-04-02      | 2024-04-09        |
+| 102          | 3           | 13          | 2024-04-03      | 2024-04-15        |
+| 103          | 1           | 11          | 2024-04-05      | 2024-04-12        |
 
 **MULTA**
 
@@ -87,9 +88,10 @@
    Resultado en variable A2:
    A2 = A1 join PRESTAMO (por id\_usuario)
    
-| id\_usuario | nombre | id\_prestamo | fecha\_prestamo | fecha\_devolucion |
-| ------------- | -------- | -------------- | ----------------- | ------------------- |
-| 1           | Ana    | 100          | 2024-04-01      | 2024-04-10        |
+| id\_usuario | nombre | id\_prestamo | id\_libro | fecha\_prestamo | fecha\_devolucion |
+| ------------- | -------- | -------------- | ----------- | ----------------- | ------------------- |
+| 1           | Ana    | 100          | 10          | 2024-04-01      | 2024-04-10        |
+| 1           | Ana    | 103          | 11          | 2024-04-05      | 2024-04-12        |
    
    
 3. **Join con LIBRO:**
@@ -129,15 +131,16 @@
 2. **Join con PRESTAMO:**
    Unimos B1 con PRESTAMO para conocer qué préstamo generó la multa.
    B2 = B1 join PRESTAMO (por id\_prestamo)
-   
-| id\_prestamo | id\_usuario | nombre | email                                | monto | estado    |
-| -------------- | ------------- | -------- | -------------------------------------- | ------- | ----------- |
-| 102          | 3           | Carla  | [carla@mail.com](mailto:carla@mail.com) | 15.00 | Pendiente |
-   
-   
+
+
 3. **Join con USUARIO:**
    Unimos B2 con USUARIO por id\_usuario.
    B3 = B2 join USUARIO (por id\_usuario)
+
+| id\_prestamo | id\_usuario | nombre | email | id\_multa | monto | estado |
+| -------------- | ------------- | -------- | --------- | ----------- | ------- | ----------- |
+| 102 | 3 | Carla | carla@mail.com | 1 | 15.00 | Pendiente |
+
 4. **Proyección:**
    π(nombre, email)(B3)
    
@@ -274,7 +277,7 @@ SELECT u.nombre, SUM(m.monto) AS total_multas
 FROM usuario u
 JOIN prestamo p ON u.id_usuario = p.id_usuario
 JOIN multa m ON p.id_prestamo = m.id_prestamo
-GROUP BY u.nombre;
+GROUP BY u.id_usuario, u.nombre;
 ```
 
 3. Libros de la categoría “Novela” actualmente prestados
