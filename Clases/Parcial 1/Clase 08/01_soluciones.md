@@ -134,21 +134,20 @@ R = π{id_empleado, id_proyecto}(ASIGNACION)
 EMPS_NAC = R ÷ S_nac:
 EMPS_NAC = {1,2}
 
-EMPS_INT = R ÷ S_int  → empleados que tienen relación con **ambos** 200 y 300:
+EMPS_INT_ANY = π{id_empleado}(R ⨝ S_int)
+(Empleados que trabajaron en AL MENOS UN proyecto Internacional {200, 300})
 
-- Emp1 → proyectos {100,200}  (no 300)
-- Emp2 → {100}               (no 200 ni 300)
-- Emp3 → {200}               (no 300)
-- Emp4 → {300}               (no 200)
-- 
+- Emp 1 → tiene proy 200 (SI está)
+- Emp 3 → tiene proy 200 (SI está)
+- Emp 4 → tiene proy 300 (SI está)
 
-EMPS_INT = ∅
+EMPS_INT_ANY = {1, 3, 4}
 
-IDS = EMPS_NAC − EMPS_INT = {1,2} − ∅ = {1,2}
-IDS ⨝ EMPLEADO
+IDS = EMPS_NAC − EMPS_INT_ANY = {1,2} − {1,3,4} = {2}
+
+Resultado Final: IDS ⨝ EMPLEADO
 
 | id_empleado | nombre      | depto     | salario |
 |-------------|-------------|-----------|---------|
-| 1           | Ana Torres  | Ventas    | 2500    |
 | 2           | Luis Pérez  | Finanzas  | 1800    |
 
