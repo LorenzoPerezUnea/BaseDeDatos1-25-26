@@ -1,0 +1,100 @@
+# Ejercicio 1 — Plataforma para empresa de servicios
+
+## 1. Entidades
+- **Cliente** (`id_cliente`, nombre, dirección, teléfono)  
+  - **Persona** (`fecha_nacimiento`, DNI)  
+  - **Empresa** (`razón_social`, CIF)  
+- **Servicio** (`id_servicio`, nombre, tipo, precio)  
+- **Contrato** (`id_contrato`, fecha_inicio, fecha_fin, estado)  
+- **Empleado** (`id_empleado`, nombre, cargo)  
+  - **Técnico** (`especialidad`)  
+  - **Administrativo** (`departamento`)  
+
+## 2. Relaciones
+- **Cliente —(contrata)— Contrato**  
+  - 1 Cliente ↔ N Contratos  
+- **Contrato —(incluye)— Servicio**  
+  - N Contratos ↔ M Servicios  
+- **Empleado —(atiende)— Contrato**  
+  - 1 Empleado ↔ N Contratos  
+
+## 3. Jerarquías de generalización
+- **Cliente** → {Persona, Empresa}  
+  - Cobertura: **Total**  
+  - Disyunción: **Disjunta**  
+- **Empleado** → {Técnico, Administrativo}  
+  - Cobertura: **Total**  
+  - Disyunción: **Disjunta**  
+
+## 4. Identificadores
+- Cliente: `id_cliente`  
+- Servicio: `id_servicio`  
+- Contrato: `id_contrato`  
+- Empleado: `id_empleado`  
+
+## 5. Modelo Relacional
+```sql
+CREATE TABLE Cliente (
+  id_cliente INT PRIMARY KEY,
+  nombre VARCHAR(100),
+  direccion VARCHAR(200),
+  telefono VARCHAR(20)
+);
+
+CREATE TABLE Persona (
+  id_cliente INT PRIMARY KEY,
+  fecha_nacimiento DATE,
+  DNI VARCHAR(20),
+  FOREIGN KEY (id_cliente) REFERENCES Cliente(id_cliente)
+);
+
+CREATE TABLE Empresa (
+  id_cliente INT PRIMARY KEY,
+  razon_social VARCHAR(100),
+  CIF VARCHAR(20),
+  FOREIGN KEY (id_cliente) REFERENCES Cliente(id_cliente)
+);
+
+CREATE TABLE Empleado (
+  id_empleado INT PRIMARY KEY,
+  nombre VARCHAR(100),
+  cargo VARCHAR(50)
+);
+
+CREATE TABLE Tecnico (
+  id_empleado INT PRIMARY KEY,
+  especialidad VARCHAR(100),
+  FOREIGN KEY (id_empleado) REFERENCES Empleado(id_empleado)
+);
+
+CREATE TABLE Administrativo (
+  id_empleado INT PRIMARY KEY,
+  departamento VARCHAR(100),
+  FOREIGN KEY (id_empleado) REFERENCES Empleado(id_empleado)
+);
+
+CREATE TABLE Servicio (
+  id_servicio INT PRIMARY KEY,
+  nombre VARCHAR(100),
+  tipo VARCHAR(50),
+  precio DECIMAL(10,2)
+);
+
+CREATE TABLE Contrato (
+  id_contrato INT PRIMARY KEY,
+  id_cliente INT,
+  id_empleado INT,
+  fecha_inicio DATE,
+  fecha_fin DATE,
+  estado VARCHAR(50),
+  FOREIGN KEY (id_cliente) REFERENCES Cliente(id_cliente),
+  FOREIGN KEY (id_empleado) REFERENCES Empleado(id_empleado)
+);
+
+CREATE TABLE Contrato_Servicio (
+  id_contrato INT,
+  id_servicio INT,
+  PRIMARY KEY (id_contrato, id_servicio),
+  FOREIGN KEY (id_contrato) REFERENCES Contrato(id_contrato),
+  FOREIGN KEY (id_servicio) REFERENCES Servicio(id_servicio)
+);

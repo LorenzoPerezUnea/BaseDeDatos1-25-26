@@ -1,0 +1,217 @@
+# Ejercicio 2 — Plataforma de Streaming y Torneos de Videojuegos
+
+## 1. Requisitos (resumen)
+- Jugadores crean perfiles y pueden seguir a otros jugadores.  
+- Jugadores pueden transmitir en vivo (streaming).  
+- La plataforma registra torneos y partidas.  
+- Espectadores pueden enviar donaciones y comentarios en directo.  
+- Se generan estadísticas por jugador y por torneo.  
+- Cada juego tiene categorías y modos de juego.  
+- Jugadores pueden formar equipos y participar en torneos.
+
+## 2. Entidades (conceptual)
+- **Usuario** (superclase)  
+  - **Jugador** (`idJugador`, nickname, nivel, experiencia, email)  
+  - **Espectador** (`idEspectador`, nickname, email)  
+- **Perfil** (`idPerfil`, avatar, bio, preferencias, redesSociales)  
+- **Transmision** (`idTransmision`, titulo, fechaHora, duracion, visualizaciones)  
+- **Torneo** (`idTorneo`, nombre, fechaInicio, fechaFin, premios)  
+- **Partida** (`idPartida`, fechaHora, duracion, resultado)  
+- **Juego** (`idJuego`, nombre, genero, plataforma`)  
+- **Equipo** (`idEquipo`, nombre, ranking`)  
+- **Donacion** (`idDonacion`, monto, fechaHora`)  
+- **Comentario** (`idComentario`, contenido, fechaHora`)
+
+## 3. Relaciones y cardinalidades (verbos)
+- **Usuario–Perfil**: 1:1 — Un usuario tiene un perfil.  
+- **Jugador–Transmision**: 1:N — Un jugador puede realizar muchas transmisiones.  
+- **Jugador–Equipo**: N:M — Jugadores pueden pertenecer a varios equipos y un equipo tiene varios jugadores.  
+- **Equipo–Torneo**: N:M — Un equipo puede participar en muchos torneos; un torneo puede tener muchos equipos.  
+- **Torneo–Partida**: 1:N — Un torneo contiene muchas partidas.  
+- **Partida–Juego**: N:1 — Cada partida corresponde a un juego.  
+- **Espectador–Donacion**: 1:N — Un espectador puede hacer muchas donaciones.  
+- **Espectador–Comentario**: 1:N — Un espectador puede escribir muchos comentarios.  
+- **Transmision–Donacion**: 1:N — Una transmisión puede recibir muchas donaciones (cada donación apunta a una transmisión).  
+- **Transmision–Comentario**: 1:N — Una transmisión puede recibir muchos comentarios.  
+- **Jugador–Jugador (Follow)**: N:M (autorreferencia) — Los jugadores pueden seguir a otros jugadores.
+
+## 4. Atributos por entidad (lista)
+- **Jugador**: `idJugador`, `nickname`, `nivel`, `experiencia`, `email`  
+- **Espectador**: `idEspectador`, `nickname`, `email`  
+- **Perfil**: `idPerfil`, `avatar`, `bio`, `preferencias`, `redesSociales`  
+- **Transmision**: `idTransmision`, `titulo`, `fechaHora`, `duracion`, `visualizaciones`  
+- **Torneo**: `idTorneo`, `nombre`, `fechaInicio`, `fechaFin`, `premios`  
+- **Partida**: `idPartida`, `fechaHora`, `duracion`, `resultado`  
+- **Juego**: `idJuego`, `nombre`, `genero`, `plataforma`  
+- **Equipo**: `idEquipo`, `nombre`, `ranking`  
+- **Donacion**: `idDonacion`, `monto`, `fechaHora`  
+- **Comentario**: `idComentario`, `contenido`, `fechaHora`
+
+## 5. Jerarquías / Generalizaciones
+- **Usuario** → {**Jugador**, **Espectador**}  
+  - Cobertura: **Total** (todo usuario es Jugador o Espectador) — opcional según el modelo real.  
+  - Disyunción: **Disjunta** (no es ambas).  
+- **Evento** → {**Transmision**, **Torneo**}  
+  - Cobertura: **Parcial** o **Total** según requerimiento (a definir).  
+  - Disyunción: **Disjunta** (una instancia es o transmisión o torneo).
+
+## 6. Identificadores
+- Jugador: `idJugador`  
+- Espectador: `idEspectador`  
+- Perfil: `idPerfil`  
+- Transmision: `idTransmision`  
+- Torneo: `idTorneo`  
+- Partida: `idPartida`  
+- Juego: `idJuego`  
+- Equipo: `idEquipo`  
+- Donacion: `idDonacion`  
+- Comentario: `idComentario`
+
+## 7. Modelo Relacional (sentencias SQL ejemplo)
+
+```sql
+CREATE TABLE Usuario (
+  idUsuario INT PRIMARY KEY,
+  tipo VARCHAR(20) NOT NULL -- 'Jugador' o 'Espectador'
+);
+
+CREATE TABLE Jugador (
+  idJugador INT PRIMARY KEY,
+  idUsuario INT UNIQUE,
+  nickname VARCHAR(50),
+  nivel INT,
+  experiencia BIGINT,
+  email VARCHAR(100),
+  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
+);
+
+CREATE TABLE Espectador (
+  idEspectador INT PRIMARY KEY,
+  idUsuario INT UNIQUE,
+  nickname VARCHAR(50),
+  email VARCHAR(100),
+  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
+);
+
+CREATE TABLE Perfil (
+  idPerfil INT PRIMARY KEY,
+  idUsuario INT UNIQUE,
+  avatar VARCHAR(200),
+  bio TEXT,
+  preferencias TEXT,
+  redesSociales TEXT,
+  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
+);
+
+CREATE TABLE Juego (
+  idJuego INT PRIMARY KEY,
+  nombre VARCHAR(100),
+  genero VARCHAR(50),
+  plataforma VARCHAR(50)
+);
+
+CREATE TABLE Transmision (
+  idTransmision INT PRIMARY KEY,
+  idJugador INT,
+  titulo VARCHAR(200),
+  fechaHora DATETIME,
+  duracion INT, -- duración en segundos
+  visualizaciones INT,
+  FOREIGN KEY (idJugador) REFERENCES Jugador(idJugador)
+);
+
+CREATE TABLE Torneo (
+  idTorneo INT PRIMARY KEY,
+  nombre VARCHAR(150),
+  fechaInicio DATE,
+  fechaFin DATE,
+  premios TEXT
+);
+
+CREATE TABLE Partida (
+  idPartida INT PRIMARY KEY,
+  idTorneo INT,
+  idJuego INT,
+  fechaHora DATETIME,
+  duracion INT,
+  resultado TEXT,
+  FOREIGN KEY (idTorneo) REFERENCES Torneo(idTorneo),
+  FOREIGN KEY (idJuego) REFERENCES Juego(idJuego)
+);
+
+CREATE TABLE Equipo (
+  idEquipo INT PRIMARY KEY,
+  nombre VARCHAR(100),
+  ranking INT
+);
+
+-- Relación N:M Jugador - Equipo
+CREATE TABLE Jugador_Equipo (
+  idJugador INT,
+  idEquipo INT,
+  fechaEntrada DATE,
+  PRIMARY KEY (idJugador, idEquipo),
+  FOREIGN KEY (idJugador) REFERENCES Jugador(idJugador),
+  FOREIGN KEY (idEquipo) REFERENCES Equipo(idEquipo)
+);
+
+-- Relación N:M Equipo - Torneo (participación)
+CREATE TABLE Equipo_Torneo (
+  idEquipo INT,
+  idTorneo INT,
+  posicion INT,
+  PRIMARY KEY (idEquipo, idTorneo),
+  FOREIGN KEY (idEquipo) REFERENCES Equipo(idEquipo),
+  FOREIGN KEY (idTorneo) REFERENCES Torneo(idTorneo)
+);
+
+-- Donaciones y comentarios apuntan a una Transmision y a un Espectador
+CREATE TABLE Donacion (
+  idDonacion INT PRIMARY KEY,
+  idEspectador INT,
+  idTransmision INT,
+  monto DECIMAL(10,2),
+  fechaHora DATETIME,
+  FOREIGN KEY (idEspectador) REFERENCES Espectador(idEspectador),
+  FOREIGN KEY (idTransmision) REFERENCES Transmision(idTransmision)
+);
+
+CREATE TABLE Comentario (
+  idComentario INT PRIMARY KEY,
+  idEspectador INT,
+  idTransmision INT,
+  contenido TEXT,
+  fechaHora DATETIME,
+  FOREIGN KEY (idEspectador) REFERENCES Espectador(idEspectador),
+  FOREIGN KEY (idTransmision) REFERENCES Transmision(idTransmision)
+);
+
+-- Seguidores entre jugadores (autorreferencia)
+CREATE TABLE Follow (
+  follower INT, -- idJugador que sigue
+  followed INT, -- idJugador seguido
+  fechaFollow DATE,
+  PRIMARY KEY (follower, followed),
+  FOREIGN KEY (follower) REFERENCES Jugador(idJugador),
+  FOREIGN KEY (followed) REFERENCES Jugador(idJugador)
+);
+
+-- Tablas opcionales para estadísticas
+CREATE TABLE Estadistica_Jugador (
+  idJugador INT,
+  periodo VARCHAR(20),
+  partidasJugadas INT,
+  victorias INT,
+  derrotas INT,
+  PRIMARY KEY (idJugador, periodo),
+  FOREIGN KEY (idJugador) REFERENCES Jugador(idJugador)
+);
+
+CREATE TABLE Estadistica_Torneo (
+  idTorneo INT,
+  periodo VARCHAR(20),
+  totalPartidas INT,
+  promedioDuracion INT,
+  PRIMARY KEY (idTorneo, periodo),
+  FOREIGN KEY (idTorneo) REFERENCES Torneo(idTorneo)
+);

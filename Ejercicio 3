@@ -1,0 +1,196 @@
+# Ejercicio 3 — Plataforma de Bienestar y Belleza
+
+## 1. Requisitos (resumen)
+- Usuarios crean perfiles y siguen rutinas personalizadas.  
+- Entrenadores publican rutinas y consejos.  
+- Usuarios registran progreso en rutinas y metas de salud.  
+- La plataforma ofrece productos de belleza y bienestar para la venta.  
+- Usuarios pueden hacer reseñas y valoraciones de productos y entrenadores (o rutinas).  
+- Se generan estadísticas de rendimiento y progreso personal.  
+- Categorías de rutinas: fuerza, cardio, relajación, belleza de piel, cuidado personal.  
+- Usuarios pueden unirse a grupos de interés para compartir consejos y retos.
+
+## 2. Entidades (conceptual)
+- **Usuario** (`id_usuario`, nombre, email, fecha_nacimiento, teléfono?, dirección?)  
+- **Entrenador** (especialización/rol sobre Usuario): (`id_entrenador`, id_usuario referencia, especialidad, certificaciones, bio)  
+- **Perfil** (`id_perfil`, id_usuario referencia, altura, peso, objetivos, preferencias)  
+- **Rutina** (`id_rutina`, nombre, descripción, duración, nivel_dificultad, id_entrenador`, id_categoria)  
+- **Progreso** (`id_progreso`, id_usuario, id_rutina? , fecha, peso, repeticiones, notas)  
+- **Producto** (`id_producto`, nombre, descripción, tipo, precio, stock, id_categoria`)  
+- **Categoria** (`id_categoria`, nombre, descripción`) — para rutinas y/o productos  
+- **Grupo** (`id_grupo`, nombre, descripción`)  
+- **Reseña** (`id_resena`, id_usuario, contenido, calificacion, fecha, id_producto?, id_rutina?`)  
+- **Compra** (`id_compra`, id_usuario, id_producto, cantidad, fecha, precio_unitario`) — opcional para ventas
+
+## 3. Relaciones y cardinalidades (verbos)
+- **Usuario — Perfil**: 1:1 — cada usuario tiene un perfil.  
+- **Usuario — Grupo**: N:M — usuarios pueden pertenecer a muchos grupos; un grupo tiene muchos usuarios. (tabla puente `Usuario_Grupo`).  
+- **Usuario — Progreso**: 1:N — un usuario registra muchos progresos.  
+- **Usuario — Rutina (seguimiento)**: N:M — usuarios pueden seguir muchas rutinas; una rutina puede ser seguida por muchos usuarios. (tabla puente `Usuario_Rutina`).  
+- **Entrenador — Rutina (crea)**: 1:N — un entrenador crea muchas rutinas; una rutina tiene un creador.  
+- **Rutina — Categoria**: N:1 — una rutina pertenece a una categoría; una categoría agrupa muchas rutinas.  
+- **Producto — Categoria**: N:1 — un producto pertenece a una categoría; una categoría agrupa productos.  
+- **Usuario — Producto (compra)**: N:M (implementado con `Compra`) — usuarios compran productos.  
+- **Usuario — Reseña — (Producto | Rutina)**: 1:N — un usuario escribe muchas reseñas; cada reseña referencia exactamente uno de (producto, rutina) (restricción semántica).  
+
+## 4. Atributos y claves (lista)
+- **Usuario**: `id_usuario` (PK), `nombre`, `email`, `fecha_nacimiento`, `telefono` (opcional), `direccion` (opcional)  
+- **Entrenador**: `id_entrenador` (PK), `id_usuario` (FK → Usuario), `especialidad`, `certificaciones`, `tipo_entrenador`, `bio`  
+- **Perfil**: `id_perfil` (PK), `id_usuario` (FK UNIQUE → Usuario), `altura`, `peso`, `objetivos`, `preferencias`  
+- **Rutina**: `id_rutina` (PK), `nombre`, `descripcion`, `duracion` (minutos), `nivel_dificultad`, `id_entrenador` (FK), `id_categoria` (FK)  
+- **Progreso**: `id_progreso` (PK), `id_usuario` (FK), `id_rutina` (FK nullable), `fecha`, `peso`, `repeticiones`, `notas`  
+- **Producto**: `id_producto` (PK), `nombre`, `descripcion`, `tipo`, `precio`, `stock`, `id_categoria` (FK)  
+- **Categoria**: `id_categoria` (PK), `nombre`, `descripcion`  
+- **Grupo**: `id_grupo` (PK), `nombre`, `descripcion`  
+- **Reseña**: `id_resena` (PK), `id_usuario` (FK), `contenido`, `calificacion` (1..5), `fecha`, `id_producto` (FK nullable), `id_rutina` (FK nullable)  
+- **Compra**: `id_compra` (PK), `id_usuario` (FK), `id_producto` (FK), `cantidad`, `fecha`, `precio_unitario`  
+
+**Nota:** para `Reseña` aplicamos una restricción para que **referencie exactamente uno** de `id_producto` o `id_rutina` (ver SQL).
+
+## 5. Jerarquías / Generalizaciones
+- **Usuario** (generalización) → puede ser **Entrenador** o **Usuario estándar/Cliente**.  
+- **Entrenador** → puede clasificarse en subtipos (`Personal_Trainer`, `Nutricionista`, etc.).  
+- Cobertura y disyunción: según política del sistema (normalmente total y disjunta para Entrenador vs Usuario estándar si todos los entrenadores son usuarios y no se quiere duplicidad).
+
+---
+
+## 6. Modelo Relacional — Sentencias SQL (ejemplo)
+
+```sql
+CREATE TABLE Usuario (
+  id_usuario INT PRIMARY KEY,
+  nombre VARCHAR(150),
+  email VARCHAR(150) UNIQUE,
+  fecha_nacimiento DATE,
+  telefono VARCHAR(20),
+  direccion VARCHAR(250)
+);
+
+CREATE TABLE Entrenador (
+  id_entrenador INT PRIMARY KEY,
+  id_usuario INT UNIQUE,
+  especialidad VARCHAR(150),
+  certificaciones TEXT,
+  tipo_entrenador VARCHAR(50),
+  bio TEXT,
+  FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);
+
+CREATE TABLE Perfil (
+  id_perfil INT PRIMARY KEY,
+  id_usuario INT UNIQUE,
+  altura DECIMAL(5,2), -- en metros
+  peso DECIMAL(6,2), -- kg
+  objetivos TEXT,
+  preferencias TEXT,
+  FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);
+
+CREATE TABLE Categoria (
+  id_categoria INT PRIMARY KEY,
+  nombre VARCHAR(100),
+  descripcion TEXT
+);
+
+CREATE TABLE Rutina (
+  id_rutina INT PRIMARY KEY,
+  nombre VARCHAR(150),
+  descripcion TEXT,
+  duracion INT, -- minutos
+  nivel_dificultad VARCHAR(50),
+  id_entrenador INT,
+  id_categoria INT,
+  FOREIGN KEY (id_entrenador) REFERENCES Entrenador(id_entrenador),
+  FOREIGN KEY (id_categoria) REFERENCES Categoria(id_categoria)
+);
+
+CREATE TABLE Progreso (
+  id_progreso INT PRIMARY KEY,
+  id_usuario INT,
+  id_rutina INT NULL,
+  fecha DATE,
+  peso DECIMAL(6,2) NULL,
+  repeticiones INT NULL,
+  notas TEXT,
+  FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+  FOREIGN KEY (id_rutina) REFERENCES Rutina(id_rutina)
+);
+
+CREATE TABLE Producto (
+  id_producto INT PRIMARY KEY,
+  nombre VARCHAR(150),
+  descripcion TEXT,
+  tipo VARCHAR(80),
+  precio DECIMAL(10,2),
+  stock INT,
+  id_categoria INT,
+  FOREIGN KEY (id_categoria) REFERENCES Categoria(id_categoria)
+);
+
+CREATE TABLE Grupo (
+  id_grupo INT PRIMARY KEY,
+  nombre VARCHAR(150),
+  descripcion TEXT
+);
+
+-- Tabla puente Usuario <-> Grupo (miembros)
+CREATE TABLE Usuario_Grupo (
+  id_usuario INT,
+  id_grupo INT,
+  fecha_union DATE,
+  PRIMARY KEY (id_usuario, id_grupo),
+  FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+  FOREIGN KEY (id_grupo) REFERENCES Grupo(id_grupo)
+);
+
+-- Tabla puente Usuario <-> Rutina (seguimiento)
+CREATE TABLE Usuario_Rutina (
+  id_usuario INT,
+  id_rutina INT,
+  fecha_seguimiento DATE,
+  PRIMARY KEY (id_usuario, id_rutina),
+  FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+  FOREIGN KEY (id_rutina) REFERENCES Rutina(id_rutina)
+);
+
+-- Compras
+CREATE TABLE Compra (
+  id_compra INT PRIMARY KEY,
+  id_usuario INT,
+  id_producto INT,
+  cantidad INT,
+  fecha TIMESTAMP,
+  precio_unitario DECIMAL(10,2),
+  FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+  FOREIGN KEY (id_producto) REFERENCES Producto(id_producto)
+);
+
+-- Reseñas: cada reseña debe referenciar exactamente UNO de (Producto, Rutina)
+CREATE TABLE Resena (
+  id_resena INT PRIMARY KEY,
+  id_usuario INT,
+  contenido TEXT,
+  calificacion INT CHECK (calificacion >= 1 AND calificacion <= 5),
+  fecha TIMESTAMP,
+  id_producto INT NULL,
+  id_rutina INT NULL,
+  FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
+  FOREIGN KEY (id_producto) REFERENCES Producto(id_producto),
+  FOREIGN KEY (id_rutina) REFERENCES Rutina(id_rutina),
+  CHECK (
+    (id_producto IS NOT NULL AND id_rutina IS NULL)
+    OR
+    (id_producto IS NULL AND id_rutina IS NOT NULL)
+  )
+);
+
+-- Tablas opcionales para estadísticas (ejemplo)
+CREATE TABLE Estadistica_Usuario (
+  id_usuario INT,
+  periodo VARCHAR(20),
+  peso_inicial DECIMAL(6,2),
+  peso_actual DECIMAL(6,2),
+  progreso_porcentual DECIMAL(5,2),
+  PRIMARY KEY (id_usuario, periodo),
+  FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);
